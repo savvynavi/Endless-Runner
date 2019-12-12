@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour{
-	public Transform player;
+
+	[SerializeField]
+	Transform player;
 
 	Quaternion cameraAngle;
 	Vector3 position;
