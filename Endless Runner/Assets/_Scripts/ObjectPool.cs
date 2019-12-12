@@ -11,6 +11,8 @@ public class ObjectPool : MonoBehaviour {
 	[SerializeField]
 	int numInPool = 20;
 
+	public int numItemsOnPlatform;
+
 	List<GameObject> pooledObjects;
 
 	private void Awake() {

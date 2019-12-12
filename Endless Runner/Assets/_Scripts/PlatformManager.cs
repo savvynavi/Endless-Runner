@@ -10,9 +10,18 @@ public class PlatformManager : MonoBehaviour {
 	float minHozirontalDist;
 	[SerializeField]
 	float maxHorizontalDist;
+	[SerializeField]
+	CollectableManager collectableManager;
 
 	[SerializeField]
 	List<ObjectPool> pools;
+
+
+	//[System.Serializable]
+	//public class DictionaryOfObjectPoolAndInt : SerializableDictionary<ObjectPool, int> { }
+
+	//[SerializeField]
+	//DictionaryOfObjectPoolAndInt poolsDictionary;
 
 	[SerializeField]
 	Transform minHeightPoint;
@@ -69,6 +78,13 @@ public class PlatformManager : MonoBehaviour {
 			newPlatform.transform.position = transform.position;
 			newPlatform.transform.rotation = transform.rotation;
 			newPlatform.SetActive(true);
+
+			//int numOfCollectables = 
+
+			//activate collectables
+			if(Random.Range(0, 100) <= collectableManager.percentChance) {
+				collectableManager.PlaceCollectable(new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.3f, transform.position.z), pools[platformTypeSelected].numItemsOnPlatform, platformLengths[platformTypeSelected]);
+			}
 
 			//reset the current transform position to the end of the platform
 			transform.position = new Vector3(transform.position.x + (platformLengths[platformTypeSelected] / 2), transform.position.y, transform.position.z);
