@@ -18,12 +18,13 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	LayerMask platformLayers;
 
+	public bool isDead = false;
+
 	Rigidbody2D rigidbody;
 	BoxCollider2D collider;
 	Animator anim;
 	bool jumping = false;
 	bool jumpBtnDown = false;
-
 
 	private void Start() {
 		rigidbody = GetComponent<Rigidbody2D>();
@@ -32,7 +33,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Update() {
-		if(isGrounded() && Input.GetKeyDown(KeyCode.Space)) {
+
+		if(isGrounded() && isDead == false && Input.GetKeyDown(KeyCode.Space)) {
 			rigidbody.velocity = Vector2.up * jumpDist;
 			//anim.SetBool("isJumping", true);
 		}
@@ -47,9 +49,14 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		float move = Input.GetAxisRaw("Horizontal");
-		anim.SetFloat("speed", Mathf.Abs(move * speed));
-		rigidbody.velocity = new Vector2(speed * move, rigidbody.velocity.y);
+		//if dead, stops the player auto-moving forward
+		if(isDead == false) {
+			float move = Input.GetAxisRaw("Horizontal");
+			anim.SetFloat("speed", Mathf.Abs(move * speed));
+			rigidbody.velocity = new Vector2(speed * move, rigidbody.velocity.y);
+		} else {
+			rigidbody.velocity = Vector2.zero;
+		}
 	}
 
 	bool isGrounded() {

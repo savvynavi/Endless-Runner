@@ -25,6 +25,7 @@ public class Collectable : MonoBehaviour {
 
 	public void collectAnim() {
 		//once collection anim is over, turn object off and reset to idle animation
+		ScoreManager.instance.AddPoints(points);
 		gameObject.SetActive(false);
 		anim.SetBool("collected", false);
 	}
