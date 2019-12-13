@@ -12,6 +12,8 @@ public class PlatformManager : MonoBehaviour {
 	float maxHorizontalDist;
 	[SerializeField]
 	CollectableManager collectableManager;
+	[SerializeField]
+	ObstacleManager obstacleManager;
 
 	[SerializeField]
 	List<ObjectPool> pools;
@@ -66,9 +68,9 @@ public class PlatformManager : MonoBehaviour {
 
 			//clamp the platform height between the min and max positions
 			if(deltaHeight > maxHeight) {
-				deltaHeight = maxHeight;
+				deltaHeight = maxHeight - pools[platformTypeSelected].prefab.GetComponent<BoxCollider2D>().size.y - 1.5f;
 			}else if(deltaHeight < minHeight) {
-				deltaHeight = minHeight;
+				deltaHeight = minHeight + pools[platformTypeSelected].prefab.GetComponent<BoxCollider2D>().size.y;
 			}
 
 			//set the position of the next platform
@@ -79,10 +81,11 @@ public class PlatformManager : MonoBehaviour {
 			newPlatform.transform.rotation = transform.rotation;
 			newPlatform.SetActive(true);
 
-			//int numOfCollectables = 
-
-			//activate collectables
-			if(Random.Range(0, 100) <= collectableManager.percentChance) {
+			//activate collectables and obstacles
+			if(Random.Range(0, 100) <= obstacleManager.percentChance && platformLengths[platformTypeSelected] >= obstacleManager.MinPlatformLength) {
+				Vector3 tmpPos = new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.1f, transform.position.z + 0.2f);
+				obstacleManager.PlaceObstacle(tmpPos, platformLengths[platformTypeSelected]);
+			} else if(Random.Range(0, 100) <= collectableManager.percentChance) {
 				collectableManager.PlaceCollectable(new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.3f, transform.position.z), pools[platformTypeSelected].numItemsOnPlatform, platformLengths[platformTypeSelected]);
 			}
 

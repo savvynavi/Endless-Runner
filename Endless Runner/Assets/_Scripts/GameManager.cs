@@ -42,9 +42,11 @@ public class GameManager : MonoBehaviour {
 
 	private void Update() {
 		//kills player if they go below scree
-		if(player != null && player.transform.position.y < deathThreashhold) {
-			player.isDead = true;
-			PlayerDeath();
+		if(player != null) {
+			if(player.transform.position.y < deathThreashhold || player.hitObstacle == true) {
+				player.isDead = true;
+				PlayerDeath();
+			}
 		}
 	}
 
@@ -57,8 +59,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator DeathState() {
-		//wait until player death anim has finished playing before popping menu up
-		yield return new WaitForSeconds(3.0f);
+		//wait until player death anim (if died to obstacle) has finished playing before popping menu up
+		float waitTime = 1.0f;
+		if(player.hitObstacle == true) {
+			waitTime = player.Anim.GetCurrentAnimatorStateInfo(0).length + player.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime + 0.5f;
+		}
+		yield return new WaitForSeconds(waitTime);
 		if(deathMenu != null) {
 			deathMenu.SetActive(true);
 			finalScore.text = "" + Mathf.Round(ScoreManager.instance.Score);
@@ -67,8 +73,10 @@ public class GameManager : MonoBehaviour {
 
 	//brings up the pause menu and stops gameplay if isPaused is true, otherwise resumes gameplay
 	public void Pause(bool isPaused) {
-		if(pauseMenu != null) {
+		if(pauseMenu != null && deathMenu.activeInHierarchy == false) {
 			pauseMenu.SetActive(isPaused);
+			player.isPaused = isPaused;
+			Physics2D.autoSimulation = !isPaused;
 
 			if(isPaused == true) {
 				pauseText.text = "resume";
@@ -81,16 +89,25 @@ public class GameManager : MonoBehaviour {
 
 	//restarts the scene
 	public void Restart() {
+		turnPhysicsOn();
 		SceneManager.LoadScene(gameScene);
 	}
 
 	//loads main menu
 	public void LoadMainMenu() {
+		turnPhysicsOn();
 		SceneManager.LoadScene(mainMenuSceneName);
 	}
 
 	//quits the game
 	public void Quit() {
 		Application.Quit();
+	}
+
+	//checks if the physics is off from the pause menu and if so, turns it on
+	void turnPhysicsOn() {
+		if(Physics2D.autoSimulation == false) {
+			Physics2D.autoSimulation = true;
+		}
 	}
 }
