@@ -9,6 +9,12 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	PlayerController player;
 	[SerializeField]
+	GameObject startPlatforms;
+	[SerializeField]
+	PlatformManager platformManager;
+	[SerializeField]
+	Toggle pauseToggle;
+	[SerializeField]
 	GameObject pauseMenu;
 	[SerializeField]
 	GameObject deathMenu;
@@ -19,9 +25,12 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	float deathThreashhold = -10.0f;
 	[SerializeField]
+	float deathWaitTime = 0.5f;
+	[SerializeField]
 	Text pauseText;
 
 	Text finalScore;
+	Vector3 playerStartPos;
 
 
 	private void Start() {
@@ -38,6 +47,11 @@ public class GameManager : MonoBehaviour {
 		if(pauseMenu != null) {
 			pauseMenu.SetActive(false);
 		}
+
+		//get players starting position
+		if(player != null) {
+			playerStartPos = player.transform.position;
+		}
 	}
 
 	private void Update() {
@@ -46,6 +60,9 @@ public class GameManager : MonoBehaviour {
 			if(player.transform.position.y < deathThreashhold || player.hitObstacle == true) {
 				player.isDead = true;
 				PlayerDeath();
+			} else {
+				player.isDead = false;
+				deathMenu.SetActive(false);
 			}
 		}
 	}
@@ -60,13 +77,13 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator DeathState() {
 		//wait until player death anim (if died to obstacle) has finished playing before popping menu up
-		float waitTime = 1.0f;
+		float waitTime = deathWaitTime;
 		if(player.hitObstacle == true) {
-			waitTime = player.Anim.GetCurrentAnimatorStateInfo(0).length + player.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime + 0.5f;
+			waitTime = player.Anim.GetCurrentAnimatorStateInfo(0).length + player.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime + deathWaitTime;
 		}
 		yield return new WaitForSeconds(waitTime);
 		if(deathMenu != null) {
-			deathMenu.SetActive(true);
+			deathMenu.SetActive(player.isDead);
 			finalScore.text = "" + Mathf.Round(ScoreManager.instance.Score);
 		}
 	}
@@ -89,6 +106,45 @@ public class GameManager : MonoBehaviour {
 
 	//restarts the scene
 	public void Restart() {
+		turnPhysicsOn();
+
+		//turn death screen off
+		player.isDead = false;
+		player.isPaused = false;
+		if(pauseToggle != null) {
+			pauseToggle.onValueChanged.Invoke(false);
+			pauseToggle.isOn = false;
+		}
+		//Pause(player.isPaused);
+		player.hitObstacle = false;
+
+		//resets player position
+		player.transform.position = playerStartPos;
+		player.Anim.SetBool("isDead", false);
+		//player.transform.rotation = playerStartPos.rotation;
+
+		//resets platform generation so game can start over
+		foreach(Transform obj in startPlatforms.transform) {
+			if(obj.gameObject.activeInHierarchy == false) {
+				obj.gameObject.SetActive(true);
+			}
+		}
+
+		if(platformManager != null) {
+			for(int i = 0; i < platformManager.PlatformObjectPools.Count; i++) {
+				platformManager.PlatformObjectPools[i].ResetAll();
+			}
+
+			platformManager.CollectableManager.Pool.ResetAll();
+			platformManager.ObstacleManager.Pool.ResetAll();
+
+			platformManager.ResetPosition();
+		}
+
+	}
+
+	//loads the game
+	public void LoadGame() {
 		turnPhysicsOn();
 		SceneManager.LoadScene(gameScene);
 	}

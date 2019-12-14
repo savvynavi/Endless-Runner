@@ -18,20 +18,28 @@ public class PlatformManager : MonoBehaviour {
 	[SerializeField]
 	List<ObjectPool> pools;
 
-
-	//[System.Serializable]
-	//public class DictionaryOfObjectPoolAndInt : SerializableDictionary<ObjectPool, int> { }
-
-	//[SerializeField]
-	//DictionaryOfObjectPoolAndInt poolsDictionary;
-
 	[SerializeField]
 	Transform minHeightPoint;
 	[SerializeField]
 	float maxDeltaHeight;
 	[SerializeField]
 	Transform maxHeightPoint;
-	
+
+	Vector3 startPosition;
+
+	public List<ObjectPool> PlatformObjectPools{
+		get { return pools; }
+		private set { }
+	}
+
+	public CollectableManager CollectableManager {
+		get { return collectableManager; }
+		private set { }
+	}
+	public ObstacleManager ObstacleManager {
+		get { return obstacleManager; }
+		private set { }
+	}
 
 
 	int platformTypeSelected;
@@ -43,6 +51,9 @@ public class PlatformManager : MonoBehaviour {
 
 
 	private void Start() {
+
+		//get position of manager initially for when game resets
+		startPosition = transform.position;
 
 		//find the length of all the platform types in the object pools
 		platformLengths = new List<float>();
@@ -93,5 +104,9 @@ public class PlatformManager : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x + (platformLengths[platformTypeSelected] / 2), transform.position.y, transform.position.z);
 		}
 
+	}
+
+	public void ResetPosition() {
+		transform.position = startPosition;
 	}
 }

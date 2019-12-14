@@ -41,4 +41,12 @@ public class ObjectPool : MonoBehaviour {
 		pooledObjects.Add(obj);
 		return obj;
 	}
+
+	//turns all objects in the pool off and resets position
+	public void ResetAll() {
+		for(int i = 0; i < pooledObjects.Count; i++) {
+			pooledObjects[i].SetActive(false);
+			pooledObjects[i].transform.position = prefab.transform.position;
+		}
+	}
 }

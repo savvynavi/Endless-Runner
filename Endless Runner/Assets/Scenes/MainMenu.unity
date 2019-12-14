@@ -250,10 +250,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  menu: {fileID: 0}
+  pauseMenu: {fileID: 0}
+  deathMenu: {fileID: 0}
   mainMenuSceneName: MainMenu
   gameScene: SampleScene
   deathThreashhold: -10
+  deathWaitTime: 0.5
+  pauseText: {fileID: 0}
 --- !u!4 &261806556
 Transform:
   m_ObjectHideFlags: 0
@@ -841,7 +844,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 261806555}
-        m_MethodName: Restart
+        m_MethodName: LoadGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -11,6 +11,11 @@ public class CollectableManager : MonoBehaviour {
 //	[SerializeField]
 	public int percentChance;
 
+	public ObjectPool Pool {
+		get { return collectablePool; }
+		private set { }
+	}
+
 	public void PlaceCollectable(Vector3 startPos, int numOfCollectables, float platformLength) {
 
 		float spacing = collectableDist;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -48,7 +49,10 @@ public class PlayerController : MonoBehaviour {
 
 #if UNITY_ANDROID
 		if(Input.GetMouseButtonDown(0)) {
-			jumpClick = true;
+			if(!EventSystem.current.IsPointerOverGameObject()) {
+				jumpClick = true;
+			}
+
 		}
 
 		if(Input.GetMouseButton(0)) {
@@ -98,7 +102,7 @@ public class PlayerController : MonoBehaviour {
 		//if dead, stops the player auto-moving forward
 		if(isDead == false && isPaused == false) {
 			//moves the player to the right (currently set to player input for testing)
-			anim.SetFloat("speed", Mathf.Abs(speed ));
+			anim.SetFloat("speed", Mathf.Abs(speed));
 			rigidbody.velocity = new Vector2(speed, rigidbody.velocity.y);
 		} else {
 			rigidbody.velocity = Vector2.zero;

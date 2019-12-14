@@ -13,6 +13,11 @@ public class ObstacleManager : MonoBehaviour {
 
 	public int percentChance;
 
+	public ObjectPool Pool {
+		get { return objectPool; }
+		private set { }
+	}
+
 	public float MinPlatformLength {
 		get { return minPlatformLength; }
 		private set { }
