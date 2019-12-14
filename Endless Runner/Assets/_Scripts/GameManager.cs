@@ -55,10 +55,12 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//loop over animation clips in the player to get the death one to use for wait time
-		List<AnimationClip> clips = new List<AnimationClip>(player.Anim.runtimeAnimatorController.animationClips);
-		foreach(AnimationClip clip in clips) {
-			if(clip.name == "Death") {
-				deathAnim = clip;
+		if(player != null) {
+			List<AnimationClip> clips = new List<AnimationClip>(player.Anim.runtimeAnimatorController.animationClips);
+			foreach(AnimationClip clip in clips) {
+				if(clip.name == "Death") {
+					deathAnim = clip;
+				}
 			}
 		}
 	}

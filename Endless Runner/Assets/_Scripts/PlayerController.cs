@@ -60,31 +60,36 @@ public class PlayerController : MonoBehaviour {
 
 
 #if UNITY_ANDROID
-		if(Input.GetMouseButtonDown(0)) {
-			if(!EventSystem.current.IsPointerOverGameObject()) {
-				jumpClick = true;
+
+		if(isDead == false) {
+			if(Input.GetMouseButtonDown(0) && isGrounded()) {
+				if(!EventSystem.current.IsPointerOverGameObject()) {
+					jumpClick = true;
+				}
+
 			}
 
-		}
-
-		if(Input.GetMouseButton(0)) {
-			jumpBtnHeld = true;
-		} else {
-			jumpBtnHeld = false;
+			if(Input.GetMouseButton(0)) {
+				jumpBtnHeld = true;
+			} else {
+				jumpBtnHeld = false;
+			}
 		}
 
 #else
+		if(isDead == false ) {
+			if(Input.GetButtonDown("Jump") && isGrounded()) {
+				jumpClick = true;
+				anim.SetBool("isJumping", true);
+			}
 
-		if(Input.GetButtonDown("Jump")) {
-			jumpClick = true;
-			anim.SetBool("isJumping", true);
+			if(Input.GetButton("Jump")) {
+				jumpBtnHeld = true;
+			} else {
+				jumpBtnHeld = false;
+			}
 		}
-
-		if(Input.GetButton("Jump")) {
-			jumpBtnHeld = true;
-		} else {
-			jumpBtnHeld = false;
-		}
+		
 #endif
 		anim.SetBool("isJumping", !isGrounded());
 		anim.SetFloat("falling", rigidbody.velocity.y);

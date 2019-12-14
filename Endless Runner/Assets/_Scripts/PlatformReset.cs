@@ -7,6 +7,7 @@ public class PlatformReset : MonoBehaviour{
 	[SerializeField]
 	GameObject DestroyPoint;
 
+
 	//finds the destruction point in the world
 	private void Start() {
 		DestroyPoint = GameObject.Find("platformDestroyPoint");
