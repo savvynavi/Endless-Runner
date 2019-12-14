@@ -38,7 +38,12 @@ public class ScoreManager : MonoBehaviour {
 		currentScore += addedPoints;
 	}
 
-	public void StopScore() {
-		addToScore = false;
+	public void isScoreCounting(bool counting) {
+		addToScore = counting;
+	}
+
+	public void ResetScore() {
+		currentScore = 0;
+		score.text = "Score: " + Mathf.Round(currentScore);
 	}
 }

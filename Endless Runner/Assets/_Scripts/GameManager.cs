@@ -31,7 +31,8 @@ public class GameManager : MonoBehaviour {
 
 	Text finalScore;
 	Vector3 playerStartPos;
-
+	float waitTime;
+	AnimationClip deathAnim;
 
 	private void Start() {
 		//if the menus are active in the scene when it starts, it turns them off
@@ -52,6 +53,14 @@ public class GameManager : MonoBehaviour {
 		if(player != null) {
 			playerStartPos = player.transform.position;
 		}
+
+		//loop over animation clips in the player to get the death one to use for wait time
+		List<AnimationClip> clips = new List<AnimationClip>(player.Anim.runtimeAnimatorController.animationClips);
+		foreach(AnimationClip clip in clips) {
+			if(clip.name == "Death") {
+				deathAnim = clip;
+			}
+		}
 	}
 
 	private void Update() {
@@ -69,18 +78,23 @@ public class GameManager : MonoBehaviour {
 
 	//called when the player dies, turns off player controls and brings up menu + final score
 	public void PlayerDeath() {
-		StartCoroutine(DeathState());
-		if(ScoreManager.instance != null) {
-			ScoreManager.instance.StopScore();
+
+		//player.Audio.Play();
+		waitTime = deathWaitTime;
+		if(player.hitObstacle == true) {
+			waitTime += deathAnim.length;
 		}
+
+		if(ScoreManager.instance != null) {
+			ScoreManager.instance.isScoreCounting(false);
+		}
+
+		StartCoroutine(DeathState());
 	}
 
 	IEnumerator DeathState() {
 		//wait until player death anim (if died to obstacle) has finished playing before popping menu up
-		float waitTime = deathWaitTime;
-		if(player.hitObstacle == true) {
-			waitTime = player.Anim.GetCurrentAnimatorStateInfo(0).length + player.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime + deathWaitTime;
-		}
+
 		yield return new WaitForSeconds(waitTime);
 		if(deathMenu != null) {
 			deathMenu.SetActive(player.isDead);
@@ -101,6 +115,7 @@ public class GameManager : MonoBehaviour {
 				pauseText.text = "pause";
 			}
 
+			ScoreManager.instance.isScoreCounting(!isPaused);
 		}
 	}
 
@@ -110,6 +125,7 @@ public class GameManager : MonoBehaviour {
 
 		//turn death screen off
 		player.isDead = false;
+		waitTime = 0;
 		player.isPaused = false;
 		if(pauseToggle != null) {
 			pauseToggle.onValueChanged.Invoke(false);
@@ -141,6 +157,11 @@ public class GameManager : MonoBehaviour {
 			platformManager.ResetPosition();
 		}
 
+		//reset the score
+		if(ScoreManager.instance != null) {
+			ScoreManager.instance.ResetScore();
+			ScoreManager.instance.isScoreCounting(true);
+		}
 	}
 
 	//loads the game

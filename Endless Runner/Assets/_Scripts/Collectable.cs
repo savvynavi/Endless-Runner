@@ -7,9 +7,11 @@ public class Collectable : MonoBehaviour {
 	public int points;
 
 	Animator anim;
+	AudioSource audio;
 
 	private void Start() {
 		anim = GetComponent<Animator>();
+		audio = GetComponent<AudioSource>();
 	}
 
 
@@ -19,6 +21,9 @@ public class Collectable : MonoBehaviour {
 			Debug.Log("strawberry get!");
 			if(anim != null) {
 				anim.SetBool("collected", true);
+			}
+			if(audio != null) {
+				audio.Play();
 			}
 		}
 	}

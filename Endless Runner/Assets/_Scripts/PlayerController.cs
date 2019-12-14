@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	LayerMask platformLayers;
 
+	[SerializeField]
+	AudioClip jumpSound;
+	[SerializeField]
+	AudioClip deathSound;
+
 	public bool isDead = false;
 	public bool isPaused = false;
 	public bool hitObstacle = false;
@@ -29,9 +34,15 @@ public class PlayerController : MonoBehaviour {
 	Rigidbody2D rigidbody;
 	BoxCollider2D collider;
 	Animator anim;
+	AudioSource audio;
 
 	public Animator Anim {
 		get { return anim; }
+		private set { }
+	}
+
+	public AudioSource Audio {
+		get { return audio; }
 		private set { }
 	}
 
@@ -40,6 +51,7 @@ public class PlayerController : MonoBehaviour {
 		rigidbody = GetComponent<Rigidbody2D>();
 		collider = GetComponent<BoxCollider2D>();
 		anim = GetComponent<Animator>();
+		audio = GetComponent<AudioSource>();
 	}
 
 	private void Update() {
@@ -87,7 +99,8 @@ public class PlayerController : MonoBehaviour {
 		if(isGrounded() && isDead == false && isPaused == false && jumpClick) {
 			rigidbody.velocity += Vector2.up * jumpDist;
 			jumpClick = false;
-
+			audio.clip = jumpSound;
+			audio.Play();
 		}
 
 		//setting the jump velocity so it falls faster
@@ -96,8 +109,6 @@ public class PlayerController : MonoBehaviour {
 		} else if(rigidbody.velocity.y > 0 && !jumpBtnHeld) {
 			rigidbody.velocity += Vector2.up * Physics2D.gravity * (lowJumpMultiplier - 1) * Time.deltaTime;
 		}
-
-
 
 		//if dead, stops the player auto-moving forward
 		if(isDead == false && isPaused == false) {
@@ -112,6 +123,8 @@ public class PlayerController : MonoBehaviour {
 	//returns true if the player is grounded, false otherwise
 	bool isGrounded() {
 		RaycastHit2D ray = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, platformLayers);
+
+		//RaycastHit2D ray = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0.0f, Vector2.down, 0.01f, platformLayers);
 		return ray.collider != null;
 	}
 
@@ -121,6 +134,8 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("hit buzzsaw!");
 			hitObstacle = true;
 			anim.SetBool("isDead", true);
+			audio.clip = deathSound;
+			audio.Play();
 		}
 	}
 }
