@@ -22,13 +22,16 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	AudioClip jumpSound;
 	[SerializeField]
+	float jumpSoundVol = 0.3f;
+	[SerializeField]
 	AudioClip deathSound;
+	[SerializeField]
+	float deathSoundVol = 0.4f;
 
 	public bool isDead = false;
 	public bool isPaused = false;
 	public bool hitObstacle = false;
 
-	float move;
 	bool jumpClick = false;
 	bool jumpBtnHeld = false;
 	Rigidbody2D rigidbody;
@@ -46,6 +49,11 @@ public class PlayerController : MonoBehaviour {
 		private set { }
 	}
 
+	public BoxCollider2D Collider {
+		get { return collider; }
+		private set { }
+	}
+
 
 	private void Start() {
 		rigidbody = GetComponent<Rigidbody2D>();
@@ -56,13 +64,19 @@ public class PlayerController : MonoBehaviour {
 
 	private void Update() {
 		//set imput for the jumps
-		move = Input.GetAxisRaw("Horizontal");
-
-
 #if UNITY_ANDROID
 
 		if(isDead == false) {
-			if(Input.GetMouseButtonDown(0) && isGrounded()) {
+			if((Input.GetMouseButtonDown(0)) && isGrounded()) {
+				
+				foreach(Touch touch in Input.touches) {
+					int id = touch.fingerId;
+					if(!EventSystem.current.IsPointerOverGameObject(id)) {
+						jumpClick = true;
+					}
+				}
+
+				//if no touches but mouseclicks, still lets you jump
 				if(!EventSystem.current.IsPointerOverGameObject()) {
 					jumpClick = true;
 				}
@@ -104,6 +118,7 @@ public class PlayerController : MonoBehaviour {
 		if(isGrounded() && isDead == false && isPaused == false && jumpClick) {
 			rigidbody.velocity += Vector2.up * jumpDist;
 			jumpClick = false;
+			audio.volume = jumpSoundVol;
 			audio.clip = jumpSound;
 			audio.Play();
 		}
@@ -128,8 +143,6 @@ public class PlayerController : MonoBehaviour {
 	//returns true if the player is grounded, false otherwise
 	bool isGrounded() {
 		RaycastHit2D ray = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, platformLayers);
-
-		//RaycastHit2D ray = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0.0f, Vector2.down, 0.01f, platformLayers);
 		return ray.collider != null;
 	}
 
@@ -139,6 +152,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("hit buzzsaw!");
 			hitObstacle = true;
 			anim.SetBool("isDead", true);
+			audio.volume = deathSoundVol;
 			audio.clip = deathSound;
 			audio.Play();
 		}

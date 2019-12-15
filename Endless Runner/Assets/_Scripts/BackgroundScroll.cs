@@ -9,10 +9,12 @@ public class BackgroundScroll : MonoBehaviour {
 
 	float length;
 	float startPos;
+	float storedStartPos;
 	Camera cam;
 
 	private void Start() {
 		startPos = transform.position.x;
+		storedStartPos = startPos;
 		length = GetComponent<SpriteRenderer>().bounds.size.x;
 		cam = Camera.main;
 	}
@@ -22,13 +24,19 @@ public class BackgroundScroll : MonoBehaviour {
 		//moves the game object away from the start position x so it scrolls
 		float tmpDist = cam.transform.position.x * (1 - paralax);
 		float DistFromStart = cam.transform.position.x * paralax;
+
 		transform.position = new Vector3(startPos + DistFromStart, transform.position.y, transform.position.z);
 
 		//resets the starting position of the gameobject if it goes to far away from the start pos
 		if(tmpDist > (startPos + length)) {
 			startPos += length;
-		}else if(tmpDist < (startPos - length)) {
+		} else if(tmpDist < (startPos - length)) {
 			startPos -= length;
 		}
+
+	}
+
+	public void ResetPosition() {
+		startPos = storedStartPos;
 	}
 }

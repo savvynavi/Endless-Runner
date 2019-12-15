@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DestroyPoint: {fileID: 0}
-  pointName: platformDestroyPoint
+  buffer: 4
 --- !u!1 &7384491379881416148
 GameObject:
   m_ObjectHideFlags: 0

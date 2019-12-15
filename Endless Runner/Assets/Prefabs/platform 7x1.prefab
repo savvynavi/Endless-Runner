@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DestroyPoint: {fileID: 0}
-  pointName: platformDestroyPoint
+  buffer: 4
 --- !u!1 &4200947869342674204
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,18 +5,25 @@ using UnityEngine;
 public class PlatformReset : MonoBehaviour{
 
 	[SerializeField]
-	GameObject DestroyPoint;
+	float buffer;
 
+	Camera cam;
 
-	//finds the destruction point in the world
 	private void Start() {
-		DestroyPoint = GameObject.Find("platformDestroyPoint");
+		cam = Camera.main;
 	}
 
 
-	//if platform falls behind the point, then it is turned off
+	//if platform falls behind the point, it is turned off
 	private void Update() {
-		if(transform.position.x < DestroyPoint.transform.position.x) {
+
+		//gets camera width and then sets the destruction point to be the cameras position minus the cams half width minus a buffer
+		float aspect = (float)Screen.width / (float)Screen.height;
+		float camHalfHeight = cam.orthographicSize;
+		float camHalfWidth = aspect * camHalfHeight;
+
+		float destroyPoint = cam.transform.position.x - camHalfWidth - buffer;
+		if(transform.position.x < destroyPoint) {
 			gameObject.SetActive(false);
 		}
 	}

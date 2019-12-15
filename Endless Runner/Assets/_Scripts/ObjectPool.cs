@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour {
 
-
-	public GameObject prefab;
+	[SerializeField]
+	GameObject prefab;
 	[SerializeField]
 	Transform parent;
 	[SerializeField]
 	int numInPool = 20;
+	[SerializeField]
+	int numItemsOnPlatform;
 
-	public int numItemsOnPlatform;
+	public GameObject Prefab{
+		get { return prefab; }
+		private set{}
+	}
+
+	public int NumItemsOnPlatform {
+		get { return numItemsOnPlatform; }
+		private set { }
+	}
+
 
 	List<GameObject> pooledObjects;
 

@@ -5,27 +5,31 @@ using UnityEngine;
 public class PlatformManager : MonoBehaviour {
 
 	[SerializeField]
-	Transform GenerationPoint;
+	float platformGenerationBuffer;
 	[SerializeField]
 	float minHozirontalDist;
 	[SerializeField]
 	float maxHorizontalDist;
 	[SerializeField]
+	float maxDeltaHeight;
+
+	[SerializeField]
 	CollectableManager collectableManager;
 	[SerializeField]
 	ObstacleManager obstacleManager;
-
 	[SerializeField]
 	List<ObjectPool> pools;
 
-	[SerializeField]
-	Transform minHeightPoint;
-	[SerializeField]
-	float maxDeltaHeight;
-	[SerializeField]
-	Transform maxHeightPoint;
-
 	Vector3 startPosition;
+	float maxHeightPos;
+	float minHeightPos;
+	Camera cam;
+	float aspect;
+	float camHalfHeight;
+	float camHalfWidth;
+
+
+	public BoxCollider2D playerCollider;
 
 	public List<ObjectPool> PlatformObjectPools{
 		get { return pools; }
@@ -51,6 +55,8 @@ public class PlatformManager : MonoBehaviour {
 
 
 	private void Start() {
+		
+		cam = Camera.main;
 
 		//get position of manager initially for when game resets
 		startPosition = transform.position;
@@ -58,19 +64,24 @@ public class PlatformManager : MonoBehaviour {
 		//find the length of all the platform types in the object pools
 		platformLengths = new List<float>();
 		for(int i = 0; i < pools.Count; i++) {
-			platformLengths.Add(pools[i].prefab.GetComponent<BoxCollider2D>().size.x);
+			platformLengths.Add(pools[i].Prefab.GetComponent<BoxCollider2D>().size.x);
 		}
 
 		//find the min and max height for platform placement
-		minHeight = minHeightPoint.position.y;
-		maxHeight = maxHeightPoint.position.y;
+		aspect = (float)Screen.width / (float)Screen.height;
+		camHalfHeight = cam.orthographicSize;
+		minHeight = cam.transform.position.y - camHalfHeight;
+		maxHeight = cam.transform.position.y + camHalfHeight;
 	}
 
 
 	private void Update() {
+		//gets the camera width for generation
+		camHalfWidth = aspect * camHalfHeight;
+		float generationPoint = cam.transform.position.x + camHalfWidth + platformGenerationBuffer;
 
 		//activates platforms and moves them into position if the current position is behind the generationPoint
-		if(transform.position.x < GenerationPoint.position.x) {
+		if(transform.position.x < generationPoint) {
 
 			//randomly pick the horizontal and vertical distance away for the next platform + the platform type
 			deltaHorizontalDist = Random.Range(minHozirontalDist, maxHorizontalDist);
@@ -78,10 +89,10 @@ public class PlatformManager : MonoBehaviour {
 			platformTypeSelected = Random.Range(0, pools.Count);
 
 			//clamp the platform height between the min and max positions
-			if(deltaHeight > maxHeight) {
-				deltaHeight = maxHeight - pools[platformTypeSelected].prefab.GetComponent<BoxCollider2D>().size.y - 1.5f;
-			}else if(deltaHeight < minHeight) {
-				deltaHeight = minHeight + pools[platformTypeSelected].prefab.GetComponent<BoxCollider2D>().size.y;
+			if(deltaHeight > (maxHeight - pools[platformTypeSelected].Prefab.GetComponent<BoxCollider2D>().size.y - playerCollider.size.y)) {
+				deltaHeight = maxHeight - pools[platformTypeSelected].Prefab.GetComponent<BoxCollider2D>().size.y - playerCollider.size.y;
+			}else if(deltaHeight < minHeight + pools[platformTypeSelected].Prefab.GetComponent<BoxCollider2D>().size.y + 0.01f) {
+				deltaHeight = minHeight + pools[platformTypeSelected].Prefab.GetComponent<BoxCollider2D>().size.y + 0.01f;
 			}
 
 			//set the position of the next platform
@@ -93,11 +104,11 @@ public class PlatformManager : MonoBehaviour {
 			newPlatform.SetActive(true);
 
 			//activate collectables and obstacles
-			if(Random.Range(0, 100) <= obstacleManager.percentChance && platformLengths[platformTypeSelected] >= obstacleManager.MinPlatformLength) {
+			if(Random.Range(0, 100) <= obstacleManager.PercentChance && platformLengths[platformTypeSelected] >= obstacleManager.MinPlatformLength) {
 				Vector3 tmpPos = new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.1f, transform.position.z + 0.2f);
-				obstacleManager.PlaceObstacle(tmpPos, platformLengths[platformTypeSelected]);
-			} else if(Random.Range(0, 100) <= collectableManager.percentChance) {
-				collectableManager.PlaceCollectable(new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.3f, transform.position.z), pools[platformTypeSelected].numItemsOnPlatform, platformLengths[platformTypeSelected]);
+				obstacleManager.PlaceObstacle(tmpPos, platformLengths[platformTypeSelected], playerCollider.size.x);
+			} else if(Random.Range(0, 100) <= collectableManager.PercentChance) {
+				collectableManager.PlaceCollectable(new Vector3(transform.position.x - (platformLengths[platformTypeSelected] / 2), transform.position.y + 0.3f, transform.position.z), pools[platformTypeSelected].NumItemsOnPlatform, platformLengths[platformTypeSelected]);
 			}
 
 			//reset the current transform position to the end of the platform

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour {
 
-	public int points;
+	[SerializeField]
+	int points;
 
 	Animator anim;
 	AudioSource audio;
@@ -14,8 +15,7 @@ public class Collectable : MonoBehaviour {
 		audio = GetComponent<AudioSource>();
 	}
 
-
-
+	//if the collectable collides with a player it plays the collected anim/plays sound
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.gameObject.tag == "Player") {
 			Debug.Log("strawberry get!");

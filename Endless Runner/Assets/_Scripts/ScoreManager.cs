@@ -12,7 +12,6 @@ public class ScoreManager : MonoBehaviour {
 
 	public static ScoreManager instance;
 
-	//public access to current score
 	public float Score {
 		get { return currentScore; }
 		private set { }
@@ -28,20 +27,24 @@ public class ScoreManager : MonoBehaviour {
 	}
 
 	private void Update() {
+		//if you can curently add to the score, adds the points/sec to the current score and then rounds it for display
 		if(addToScore == true) {
 			currentScore += pointsPerSecond * Time.deltaTime;
 			score.text = "Score: " + Mathf.Round(currentScore);
 		}
 	}
 
+	//takes in the points to add and adds them to the current score
 	public void AddPoints(int addedPoints) {
 		currentScore += addedPoints;
 	}
 
+	//sets if the score is counting
 	public void isScoreCounting(bool counting) {
 		addToScore = counting;
 	}
 
+	//resets the score to 0 and resets the text
 	public void ResetScore() {
 		currentScore = 0;
 		score.text = "Score: " + Mathf.Round(currentScore);

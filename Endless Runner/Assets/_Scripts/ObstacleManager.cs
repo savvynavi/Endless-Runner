@@ -10,8 +10,14 @@ public class ObstacleManager : MonoBehaviour {
 	float minPlatformLength;
 	[SerializeField]
 	float edgeBuffer = 0.2f;
+	[SerializeField]
+	int percentChance;
 
-	public int percentChance;
+	public int PercentChance {
+		get { return percentChance; }
+		private set { }
+	}
+
 
 	public ObjectPool Pool {
 		get { return objectPool; }
@@ -24,14 +30,13 @@ public class ObstacleManager : MonoBehaviour {
 	}
 
 	//places an obstacle on a given platform as long as it's longer than a given length
-	public void PlaceObstacle(Vector3 position, float platformLength) {
+	public void PlaceObstacle(Vector3 position, float platformLength, float playerWidth) {
 
 		GameObject tmpObstacle = objectPool.GetPooledObject();
-		float randPosition = Random.Range(position.x + edgeBuffer, position.x + platformLength - edgeBuffer);
 
+		//rinds random position between the edge of the platform plus the players width and the edge of the platform and sets this as its position
+		float randPosition = Random.Range(position.x + edgeBuffer + playerWidth, position.x + platformLength - edgeBuffer);
 		tmpObstacle.transform.position = new Vector3(randPosition, position.y, position.z);
-			
 		tmpObstacle.SetActive(true);
-
 	}
 }

@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DestroyPoint: {fileID: 0}
-  pointName: platformDestroyPoint
+  buffer: 4
 --- !u!82 &1957193143239275104
 AudioSource:
   m_ObjectHideFlags: 0

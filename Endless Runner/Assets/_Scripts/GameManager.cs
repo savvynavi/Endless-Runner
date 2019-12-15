@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	PlatformManager platformManager;
 	[SerializeField]
+	List<BackgroundScroll> bgSrollers;
+	[SerializeField]
 	Toggle pauseToggle;
 	[SerializeField]
 	GameObject pauseMenu;
@@ -45,22 +47,23 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		if(pauseMenu != null) {
-			pauseMenu.SetActive(false);
-		}
-
 		//get players starting position
 		if(player != null) {
-			playerStartPos = player.transform.position;
-		}
+			pauseMenu.SetActive(false);
 
-		//loop over animation clips in the player to get the death one to use for wait time
-		if(player != null) {
+			playerStartPos = player.transform.position;
+
+			//loop over animation clips in the player to get the death one to use for wait time
 			List<AnimationClip> clips = new List<AnimationClip>(player.Anim.runtimeAnimatorController.animationClips);
 			foreach(AnimationClip clip in clips) {
 				if(clip.name == "Death") {
 					deathAnim = clip;
 				}
+			}
+
+			//send player width to the platform manager
+			if(platformManager != null) {
+				platformManager.playerCollider = player.Collider;
 			}
 		}
 	}
@@ -78,10 +81,9 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	//called when the player dies, turns off player controls and brings up menu + final score
+	//called when the player dies, turns off the score counter and player controls, and brings up menu + final score
 	public void PlayerDeath() {
 
-		//player.Audio.Play();
 		waitTime = deathWaitTime;
 		if(player.hitObstacle == true) {
 			waitTime += deathAnim.length;
@@ -96,7 +98,6 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator DeathState() {
 		//wait until player death anim (if died to obstacle) has finished playing before popping menu up
-
 		yield return new WaitForSeconds(waitTime);
 		if(deathMenu != null) {
 			deathMenu.SetActive(player.isDead);
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviour {
 			player.isPaused = isPaused;
 			Physics2D.autoSimulation = !isPaused;
 
+			//changes text on pause button
 			if(isPaused == true) {
 				pauseText.text = "resume";
 			} else {
@@ -139,7 +141,6 @@ public class GameManager : MonoBehaviour {
 		//resets player position
 		player.transform.position = playerStartPos;
 		player.Anim.SetBool("isDead", false);
-		//player.transform.rotation = playerStartPos.rotation;
 
 		//resets platform generation so game can start over
 		foreach(Transform obj in startPlatforms.transform) {
@@ -157,6 +158,11 @@ public class GameManager : MonoBehaviour {
 			platformManager.ObstacleManager.Pool.ResetAll();
 
 			platformManager.ResetPosition();
+		}
+
+		//reset background
+		foreach(BackgroundScroll bg in bgSrollers) {
+			bg.ResetPosition();
 		}
 
 		//reset the score
