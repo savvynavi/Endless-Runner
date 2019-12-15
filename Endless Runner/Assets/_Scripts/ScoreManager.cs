@@ -9,6 +9,8 @@ public class ScoreManager : MonoBehaviour {
 	Text score;
 	[SerializeField]
 	float pointsPerSecond = 5.0f;
+	[SerializeField]
+	float maxScore;
 
 	public static ScoreManager instance;
 
@@ -30,7 +32,13 @@ public class ScoreManager : MonoBehaviour {
 		//if you can curently add to the score, adds the points/sec to the current score and then rounds it for display
 		if(addToScore == true) {
 			currentScore += pointsPerSecond * Time.deltaTime;
-			score.text = "Score: " + Mathf.Round(currentScore);
+			//if the score gets too high (and will print as an exponent on the game), stops printing the number
+			if(currentScore <= maxScore) {
+				score.text = "Score: " + Mathf.Round(currentScore);
+			} else {
+				score.text = "Score: you need to stop";
+			}
+
 		}
 	}
 

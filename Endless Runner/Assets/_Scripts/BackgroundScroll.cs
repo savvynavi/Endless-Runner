@@ -30,13 +30,9 @@ public class BackgroundScroll : MonoBehaviour {
 		//resets the starting position of the gameobject if it goes to far away from the start pos
 		if(tmpDist > (startPos + length)) {
 			startPos += length;
-		} else if(tmpDist < (startPos - length)) {
-			startPos -= length;
+		}else if(tmpDist < startPos) {
+			startPos = storedStartPos;
 		}
 
-	}
-
-	public void ResetPosition() {
-		startPos = storedStartPos;
 	}
 }

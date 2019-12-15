@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	PlatformManager platformManager;
 	[SerializeField]
-	List<BackgroundScroll> bgSrollers;
-	[SerializeField]
 	Toggle pauseToggle;
 	[SerializeField]
 	GameObject pauseMenu;
@@ -69,14 +67,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Update() {
-		//kills player if they go below scree
+		//kills player if they go below screen/hit an obstical
 		if(player != null) {
 			if(player.transform.position.y < deathThreashhold || player.hitObstacle == true) {
 				player.isDead = true;
 				PlayerDeath();
-			} else {
-				player.isDead = false;
-				deathMenu.SetActive(false);
 			}
 		}
 	}
@@ -129,13 +124,13 @@ public class GameManager : MonoBehaviour {
 
 		//turn death screen off
 		player.isDead = false;
+		deathMenu.SetActive(false);
 		waitTime = 0;
 		player.isPaused = false;
 		if(pauseToggle != null) {
 			pauseToggle.onValueChanged.Invoke(false);
 			pauseToggle.isOn = false;
 		}
-		//Pause(player.isPaused);
 		player.hitObstacle = false;
 
 		//resets player position
@@ -158,11 +153,6 @@ public class GameManager : MonoBehaviour {
 			platformManager.ObstacleManager.Pool.ResetAll();
 
 			platformManager.ResetPosition();
-		}
-
-		//reset background
-		foreach(BackgroundScroll bg in bgSrollers) {
-			bg.ResetPosition();
 		}
 
 		//reset the score

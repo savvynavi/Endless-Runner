@@ -10,17 +10,15 @@ public class CameraFollow : MonoBehaviour{
 	Quaternion cameraAngle;
 	Vector3 position;
 
-	// Use this for initialization
 	void Start() {
 		position = transform.position;
 		cameraAngle = transform.rotation;
 	}
 
-	// Update is called once per frame
-	void Update() {
+	void LateUpdate() {
 		//will set the camera up to follow the player around at the distance/angle set in the scene
 		if(player != null) {
-			transform.position = new Vector3(player.position.x + position.x, position.y, player.position.z + position.z);
+			transform.position = new Vector3(player.position.x + position.x, position.y, position.z);
 		}
 	}
 }

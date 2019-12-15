@@ -18,7 +18,6 @@ public class Collectable : MonoBehaviour {
 	//if the collectable collides with a player it plays the collected anim/plays sound
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.gameObject.tag == "Player") {
-			Debug.Log("strawberry get!");
 			if(anim != null) {
 				anim.SetBool("collected", true);
 			}

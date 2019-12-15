@@ -75,12 +75,6 @@ public class PlayerController : MonoBehaviour {
 						jumpClick = true;
 					}
 				}
-
-				//if no touches but mouseclicks, still lets you jump
-				if(!EventSystem.current.IsPointerOverGameObject()) {
-					jumpClick = true;
-				}
-
 			}
 
 			if(Input.GetMouseButton(0)) {
@@ -92,12 +86,14 @@ public class PlayerController : MonoBehaviour {
 
 #else
 		if(isDead == false ) {
-			if(Input.GetButtonDown("Jump") && isGrounded()) {
-				jumpClick = true;
-				anim.SetBool("isJumping", true);
+			if(Input.GetMouseButtonDown(0) && isGrounded()) {
+
+				if(!EventSystem.current.IsPointerOverGameObject()) {
+					jumpClick = true;
+				}
 			}
 
-			if(Input.GetButton("Jump")) {
+			if(Input.GetMouseButton(0)) {
 				jumpBtnHeld = true;
 			} else {
 				jumpBtnHeld = false;

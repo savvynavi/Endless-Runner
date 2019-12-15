@@ -153,7 +153,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   jumpSound: {fileID: 8300000, guid: ed46c28963882d84d9c4bd094e694f20, type: 3}
+  jumpSoundVol: 0.3
   deathSound: {fileID: 8300000, guid: 34b722ffc09ef4831a89b6502cd42f7e, type: 3}
+  deathSoundVol: 0.4
   isDead: 0
   isPaused: 0
   hitObstacle: 0

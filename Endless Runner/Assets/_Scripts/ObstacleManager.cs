@@ -34,7 +34,7 @@ public class ObstacleManager : MonoBehaviour {
 
 		GameObject tmpObstacle = objectPool.GetPooledObject();
 
-		//rinds random position between the edge of the platform plus the players width and the edge of the platform and sets this as its position
+		//finds random position between the edge of the platform plus the players width and the edge of the platform and sets this as its position
 		float randPosition = Random.Range(position.x + edgeBuffer + playerWidth, position.x + platformLength - edgeBuffer);
 		tmpObstacle.transform.position = new Vector3(randPosition, position.y, position.z);
 		tmpObstacle.SetActive(true);

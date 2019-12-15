@@ -14,7 +14,7 @@ public class Instructions : MonoBehaviour {
 #if UNITY_ANDROID
 		text.text = "Tap to jump!";
 #else
-		text.text = "Space to jump!";
+		text.text = "Click to jump!";
 #endif
 
 	}

@@ -1416,7 +1416,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 70
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
@@ -1953,7 +1953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3211,6 +3211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: {fileID: 701935537}
   pointsPerSecond: 5
+  maxScore: 10000000
 --- !u!4 &1629255472
 Transform:
   m_ObjectHideFlags: 0
@@ -3691,10 +3692,6 @@ MonoBehaviour:
   player: {fileID: 1674954044}
   startPlatforms: {fileID: 8529780084810180005}
   platformManager: {fileID: 118027082}
-  bgSrollers:
-  - {fileID: 1886136959}
-  - {fileID: 46911077}
-  - {fileID: 652384164}
   pauseToggle: {fileID: 413448937}
   pauseMenu: {fileID: 1471922727}
   deathMenu: {fileID: 616026091}
@@ -4831,11 +4828,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3968110039549344051, guid: 08b9f27862fa052438115421b2ebfdd4,
-        type: 3}
-      propertyPath: m_GravityScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08b9f27862fa052438115421b2ebfdd4, type: 3}
