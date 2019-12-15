@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour {
 		//kills player if they go below screen/hit an obstical
 		if(player != null) {
 			if(player.transform.position.y < deathThreashhold || player.hitObstacle == true) {
-				player.isDead = true;
+				//player.isDead = true;
 				PlayerDeath();
 			}
 		}
@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour {
 	//called when the player dies, turns off the score counter and player controls, and brings up menu + final score
 	public void PlayerDeath() {
 
+		player.isDead = true;
 		waitTime = deathWaitTime;
 		if(player.hitObstacle == true) {
 			waitTime += deathAnim.length;

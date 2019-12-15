@@ -110,8 +110,8 @@ public class PlayerController : MonoBehaviour {
 
 	private void FixedUpdate() {
 
-		//if the player is grounded and jumping, while also not dead or paused, the character will jump
-		if(isGrounded() && isDead == false && isPaused == false && jumpClick) {
+		//if the player is jumping, while also not dead or paused, the character will jump
+		if(isDead == false && isPaused == false && jumpClick) {
 			rigidbody.velocity += Vector2.up * jumpDist;
 			jumpClick = false;
 			audio.volume = jumpSoundVol;
@@ -145,7 +145,6 @@ public class PlayerController : MonoBehaviour {
 	private void OnCollisionEnter2D(Collision2D collision) {
 		//if the player collides with an obstical, sets hitObstacle to true + plays death anim
 		if(collision.gameObject.tag == "Obstacle") {
-			Debug.Log("hit buzzsaw!");
 			hitObstacle = true;
 			anim.SetBool("isDead", true);
 			audio.volume = deathSoundVol;

@@ -28,6 +28,12 @@ public class PlatformManager : MonoBehaviour {
 	float camHalfHeight;
 	float camHalfWidth;
 
+	int platformTypeSelected;
+	List<float> platformLengths;
+	float minHeight;
+	float maxHeight;
+	float deltaHeight;
+	float deltaHorizontalDist;
 
 	public BoxCollider2D playerCollider;
 
@@ -44,15 +50,6 @@ public class PlatformManager : MonoBehaviour {
 		get { return obstacleManager; }
 		private set { }
 	}
-
-
-	int platformTypeSelected;
-	List<float> platformLengths;
-	float minHeight;
-	float maxHeight;
-	float deltaHeight;
-	float deltaHorizontalDist;
-
 
 	private void Start() {
 		
